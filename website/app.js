@@ -35,17 +35,17 @@ const retriveValue = async function (url) {
   try {
     const data = await response.json();
     // get temperature
-    temp.textContent = `Temperature: ${data.main.temp} celsius`;
+    temp.innerHTML = `Temperature: ${data.main.temp} celsius`;
 
     //  get content
-    content.textContent = feelings.value;
+    content.innerHTML = feelings.value;
 
     // get date
     const stamp = data.dt;
     console.log(stamp);
     let d = new Date(stamp * 1000);
     let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
-    date.textContent = newDate;
+    date.innerHTML = newDate;
 
     // feeling
   } catch (error) {
