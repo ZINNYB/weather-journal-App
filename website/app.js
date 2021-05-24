@@ -38,7 +38,7 @@ const retriveValue = async function (url) {
     temp.textContent = `Temperature: ${data.main.temp} celsius`;
 
     //  get content
-    content.textContent = `description: ${data.weather[0].description}`;
+    content.textContent = feelings.value;
 
     // get date
     const stamp = data.dt;
