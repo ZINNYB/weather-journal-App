@@ -40,6 +40,5 @@ function addWeather(req, res) {
     feeling: weatherD.feeling,
   };
   data.push(newEntry);
-  console.log(data);
   projectData["data"] = weatherD;
 }
