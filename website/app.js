@@ -2,60 +2,22 @@
 
 /* Global Variables */
 let baseUrl = `http://api.openweathermap.org/data/2.5/weather?`;
-const apiKey = `38c452b47c3713431da7d44d1da6765a`;
+const APIKey = `38c452b47c3713431da7d44d1da6765a`;
 const btn = document.querySelector("#generate");
 const country = document.querySelector("#country");
 const zip = document.querySelector("#zip");
 const feelings = document.querySelector("#feelings");
+
+// holder elements
 const date = document.querySelector("#date");
 const temp = document.querySelector("#temp");
 const content = document.querySelector("#content");
 let state, zipCode;
+`http://api.openweathermap.org/data/2.5/weather?&`;
 
-// Create a new date instance dynamically with JS
-
-btn.addEventListener("click", UIGenerate);
-
-function UIGenerate() {
-  state = country.value;
-  zipCode = zip.value;
-  zip.classList.add("hidden");
-  country.classList.add("hidden");
-  feelings.classList.add("hidden");
-
-  retriveValue(
-    `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&q=${state}&appid=${apiKey}`
-  );
-}
-
-// fetch API data
-const retriveValue = async function (url) {
-  const response = await fetch(url);
-
-  try {
-    const data = await response.json();
-    // get temperature
-    temp.innerHTML = `Temperature: ${data.main.temp} celsius`;
-
-    //  get content
-    content.innerHTML = feelings.value;
-
-    // get date
-    const stamp = data.dt;
-    console.log(stamp);
-    let d = new Date(stamp * 1000);
-    let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
-    date.innerHTML = newDate;
-
-    // feeling
-  } catch (error) {
-    console.log("error", error);
-  }
-};
-
-const postData = async (url = "", data = {}) => {
-  console.log(data);
-  const response = await fetch("http://localhost:8000/add", {
+// Create a new date instance dynamically with J
+const postData = async function (url = "", data = {}) {
+  const response = await fetch("http://127.0.0.1:8000/addWeather", {
     method: "POST",
     credentials: "same-origin",
     headers: {
@@ -68,15 +30,56 @@ const postData = async (url = "", data = {}) => {
   try {
     const newData = await response.json();
     console.log(newData);
-    const feeling = feelings.value;
-    console.log(feeling);
+    return newData;
   } catch (error) {
     console.log("error", error);
   }
 };
 
-postData("/add", {
-  zip: 900281,
-  country: "Nigeria",
-  feelings: "i feel good now",
-});
+btn.addEventListener("click", retrieveData);
+
+function retrieveData() {
+  zip.classList.add("hidden");
+  country.classList.add("hidden");
+  feelings.classList.add("hidden");
+  let zipCode = zip.value;
+  let state = country.value;
+  getWeather(
+    `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&q=${state}&appid=${APIKey}`
+  ).then(function (data) {
+    console.log(data);
+    const stamp = data.dt;
+    let d = new Date(stamp * 1000);
+    let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
+
+    postData("/addWeather", {
+      Temperature: data.main.temp,
+      date: newDate,
+      feeling: feelings.value,
+    }).then(updateUI());
+  });
+}
+const updateUI = async () => {
+  const request = await fetch("http://127.0.0.1:8000/weather");
+  try {
+    const data = await request.json();
+    console.log(data);
+    console.log(data.data.Temperature);
+    console.log(data.data.date);
+    temp.innerHTML = `Temperature: ${data.data.Temperature} celsius`;
+    content.innerHTML = feelings.value;
+    date.innerHTML = data.data.date;
+  } catch (error) {
+    console.log("error", error);
+  }
+};
+const getWeather = async function (url) {
+  const res = await fetch(url);
+  try {
+    const data = await res.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.log("error", error);
+  }
+};

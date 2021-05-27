@@ -1,6 +1,7 @@
 // Setup empty JS object to act as endpoint for all routes
 const projectData = {};
 
+const APIKey = `38c452b47c3713431da7d44d1da6765a`;
 var express = require("express");
 // Start up an instance of app
 var app = express();
@@ -11,15 +12,12 @@ var fetch = require("node-fetch");
 //Here we are configuring express to use body-parser as middle-ware.
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.json());
 
 // Cors for cross origin allowance
 const cors = require("cors");
 app.use(cors());
 app.use(express.static("website"));
-
-app.get("/weather", function (req, res) {
-  res.send(projectData);
-});
 
 // Setup Server
 const port = 8000;
@@ -27,19 +25,21 @@ app.listen(port, () => {
   console.log(`server running at port ${port}`);
 });
 
-let dataArray = [];
-const weather = function (req, res) {
-  dataArray.push(req.body);
-  newEntry = {
-    zip: req.body.zip,
-    country: req.body.country,
-    feelings: req.body.feelings,
-  };
-  console.log(dataArray);
-  projectData.data1 = newEntry;
-  console.log(projectData);
-};
+app.get("/weather", function (req, res) {
+  res.send(projectData);
+});
 
-// create a post route for the endpoint
-console.log(dataArray);
-app.post("/add", weather);
+let data = [];
+app.post("/addWeather", addWeather);
+
+function addWeather(req, res) {
+  const weatherD = req.body;
+  let newEntry = {
+    Temperature: weatherD.Temperature,
+    date: weatherD.date,
+    feeling: weatherD.feeling,
+  };
+  data.push(newEntry);
+  console.log(data);
+  projectData["data"] = weatherD;
+}
