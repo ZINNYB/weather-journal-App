@@ -1,7 +1,7 @@
 // Setup empty JS object to act as endpoint for all routes
 const projectData = {};
 
-const APIKey = `38c452b47c3713431da7d44d1da6765a`;
+const apiKey = `38c452b47c3713431da7d44d1da6765a`;
 var express = require("express");
 // Start up an instance of app
 var app = express();
@@ -40,5 +40,8 @@ function addWeather(req, res) {
     feeling: weatherD.feeling,
   };
   data.push(newEntry);
+  console.log(data);
   projectData["data"] = weatherD;
 }
+
+// console.log(projectData);
