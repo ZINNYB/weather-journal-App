@@ -38,13 +38,13 @@ const postData = async function (url = "", data = {}) {
 btn.addEventListener("click", retrieveData);
 
 function retrieveData() {
-  zip.classList.add("hidden");
-  country.classList.add("hidden");
-  feelings.classList.add("hidden");
+  // zip.classList.add("hidden");
+  // country.classList.add("hidden");
+  // feelings.classList.add("hidden");
   let zipCode = zip.value;
   let state = country.value;
   getWeather(
-    `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&q=${state}&appid=${APIKey}`
+    `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&q=${state}&units=imperial&appid=${APIKey}`
   )
     .then(function (data) {
       const stamp = data.dt;

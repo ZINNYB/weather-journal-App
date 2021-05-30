@@ -17,10 +17,15 @@ body {
 }
 
 .holder {
+  position: relative;
+  width: 40%;
 }
 
 .entry {
-  background: rgba(59, 74, 107, 0.4);
+  background: rgba(181, 189, 207, 0.4);
+  position: relative;
+  left: 525px;
+  bottom: 52px;
 }
 
 #entryHolder {
