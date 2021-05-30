@@ -45,24 +45,27 @@ function retrieveData() {
   let state = country.value;
   getWeather(
     `http://api.openweathermap.org/data/2.5/weather?zip=${zipCode}&q=${state}&appid=${APIKey}`
-  ).then(function (data) {
-    const stamp = data.dt;
-    let d = new Date(stamp * 1000);
-    let newDate = d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
+  )
+    .then(function (data) {
+      const stamp = data.dt;
+      let d = new Date(stamp * 1000);
+      let newDate =
+        d.getMonth() + 1 + "." + d.getDate() + "." + d.getFullYear();
 
-    postData("/addWeather", {
-      Temperature: data.main.temp,
-      date: newDate,
-      feeling: feelings.value,
-    }).then(updateUI());
-  });
+      postData("/addWeather", {
+        Temperature: data.main.temp,
+        date: newDate,
+        feeling: feelings.value,
+      });
+    })
+    .then(() => {
+      updateUI();
+    });
 }
 const updateUI = async () => {
   const request = await fetch("http://127.0.0.1:8000/weather");
   try {
     const data = await request.json();
-    console.log(data.data.Temperature);
-    console.log(data.data.date);
     temp.innerHTML = `Temperature: ${data.data.Temperature} celsius`;
     content.innerHTML = feelings.value;
     date.innerHTML = data.data.date;
